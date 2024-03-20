@@ -1,0 +1,86 @@
+﻿@page "/Account/Login"
+@using System.ComponentModel.DataAnnotations
+@using ALevelBlazorTemplate.Components.Account.Shared
+@using ALevelBlazorTemplate.Model
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject ILogger<Login> Logger
+@inject NavigationManager NavigationManager
+@inject IdentityRedirectManager RedirectManager
+
+<PageTitle>Log in</PageTitle>
+<StatusMessage Message="@statusMessage" IsError="@isError" />
+
+<div class="card">
+    <div class="card-body bg-light">
+        <h4 class="card-title">Login</h4>
+        <EditForm OnValidSubmit="LoginUser" Model="Model" FormName="loginForm">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <InputText @bind-Value="Model.Email" class="form-control" placeholder="name@example.com" />
+                </div>
+                <div class="col-md-6">
+                    <label for="password" class="form-label">Password</label>
+                    <InputText type="password" @bind-Value="Model.Password" class="form-control" placeholder="Password" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+
+                </div>
+                <div class="col-md-2">
+                    <a href="@(NavigationManager.ToAbsoluteUri("Account/Register"))" class="btn btn-success w-100">Register</a>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private string? statusMessage;
+    private bool isError;
+
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    private InputModel Model { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpMethods.IsGet(HttpContext.Request.Method))
+        {
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        }
+    }
+
+    public async Task LoginUser()
+    {
+        // This doesn't count login failures towards account lockout
+        // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        var result = await SignInManager.PasswordSignInAsync(Model.Email, Model.Password, false, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+            Logger.LogInformation("User logged in.");
+            RedirectManager.RedirectTo(ReturnUrl);
+        }
+        else
+        {
+            statusMessage = "Invalid login attempt.";
+            isError = true;
+        }
+    }
+
+    private sealed class InputModel
+    {
+        public string Email { get; set; } = "";
+
+        public string Password { get; set; } = "";
+    }
+}
