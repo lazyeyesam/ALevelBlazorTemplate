@@ -48,7 +48,7 @@
     private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
-    private InputModel Model { get; set; } = new();
+    private RegisterModel Model { get; set; } = new();
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
@@ -79,7 +79,7 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
-    private sealed class InputModel
+    private sealed class RegisterModel
     {
         public string Email { get; set; } = "";
 
