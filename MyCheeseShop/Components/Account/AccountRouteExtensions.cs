@@ -1,8 +1,8 @@
-﻿using ALevelBlazorTemplate.Model;
+﻿using MyCheeseShop.Model;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace ALevelBlazorTemplate.Components.Account
+namespace MyCheeseShop.Components.Account
 {
     public static class AccountRouteExtensions
     {

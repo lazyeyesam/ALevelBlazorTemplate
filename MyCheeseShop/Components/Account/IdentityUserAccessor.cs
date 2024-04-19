@@ -1,7 +1,7 @@
-﻿using ALevelBlazorTemplate.Model;
+﻿using MyCheeseShop.Model;
 using Microsoft.AspNetCore.Identity;
 
-namespace ALevelBlazorTemplate.Components.Account
+namespace MyCheeseShop.Components.Account
 {
     internal sealed class IdentityUserAccessor(UserManager<User> userManager, IdentityRedirectManager redirectManager)
     {

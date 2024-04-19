@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ALevelBlazorTemplate.Components.Account
+namespace MyCheeseShop.Components.Account
 {
     internal sealed class IdentityRedirectManager(NavigationManager navigationManager)
     {
