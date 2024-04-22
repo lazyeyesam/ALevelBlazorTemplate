@@ -2,6 +2,7 @@
 @using MyCheeseShop.Context
 @using MyCheeseShop.Model
 @inject CheeseProvider CheeseProvider
+@inject NavigationManager NavigationManager
 
 @if (cheeses is null)
 {
@@ -18,6 +19,11 @@ else if (!cheeses.Any())
     {
         cheeses = await CheeseProvider.GetAllCheesesAsync();
     }
+    private void GoToCart()
+    {
+        NavigationManager.NavigateTo("/cart");
+    }
+
 
 }
 

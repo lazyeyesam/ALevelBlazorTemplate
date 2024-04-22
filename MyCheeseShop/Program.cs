@@ -5,7 +5,17 @@ using MyCheeseShop.Model;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+builder.Services.AddScoped<ShoppingCart>();
+builder.Services.AddScoped<DatabaseSeeder>();
+builder.Services.AddScoped<CheeseProvider>();
+
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -15,8 +25,6 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-builder.Services.AddScoped<ShoppingCart>();
-builder.Services.AddScoped<CheeseProvider>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -32,11 +40,14 @@ builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddSignInManager();
 
-builder.Services.AddScoped<DatabaseSeeder>();
 var app = builder.Build();
+
+
 using var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetService<DatabaseSeeder>();
 await seeder!.Seed();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -57,4 +68,3 @@ app.MapRazorComponents<App>()
 app.MapAdditionalAccountRoutes();
 
 app.Run();
-
