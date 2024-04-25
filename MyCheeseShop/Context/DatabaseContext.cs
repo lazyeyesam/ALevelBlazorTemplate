@@ -1,6 +1,6 @@
-﻿using MyCheeseShop.Model;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MyCheeseShop.Model;
 
 namespace MyCheeseShop.Context
 {
@@ -9,17 +9,13 @@ namespace MyCheeseShop.Context
         private IWebHostEnvironment _environment;
 
         public DbSet<Cheese> Cheeses { get; set; }
-
         public DbSet<OrderItem> OrderItems { get; set; }
-
         public DbSet<Order> Orders { get; set; }
-
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options, IWebHostEnvironment environment) : base(options)
         {
             _environment = environment;
         }
- 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionbuilder)
         {
@@ -27,7 +23,7 @@ namespace MyCheeseShop.Context
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
-            };
+            }
             optionbuilder.UseSqlite($"Data Source={folder}/cheese.db");
         }
     }

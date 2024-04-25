@@ -1,0 +1,30 @@
+﻿@page "/thank-you"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+
+<PageTitle>Thank you - EasyBriezy</PageTitle>
+
+<div class="card bg-light text-center">
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="row justify-content-end">
+                <div class="col">
+                    <h3>Thank you for shopping with EasyBriezy!</h3>
+                    <p>Your order has been successfully placed.</p>
+                    <img src="/img/happy_cheese.png" alt="Happy cheese" class="img-thumbnail thankyou-img mb-2">
+                    <div>
+                        <button @onclick="GoToStore" class="btn btn-outline-primary">🧀 Back to the cheeses</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void GoToStore()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

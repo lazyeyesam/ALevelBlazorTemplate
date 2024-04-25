@@ -13,30 +13,44 @@
 <PageTitle>Log in</PageTitle>
 <StatusMessage Message="@statusMessage" IsError="@isError" />
 
+
+
 <div class="card">
     <div class="card-body bg-light">
         <h4 class="card-title">Login</h4>
         <EditForm OnValidSubmit="LoginUser" Model="Model" FormName="loginForm">
+            <DataAnnotationsValidator />
             <div class="row g-3">
-                <div class="col-md-6">
-                    <label for="email" class="form-label">Email</label>
-                    <InputText @bind-Value="Model.Email" class="form-control" placeholder="name@example.com" />
+                <div class="form-group col-md-6">
+                    <label for="email">Email</label>
+                    <InputText id="email" @bind-Value="Model.Email" class="form-control" placeholder="name@example.com" />
+                    <div class="small">
+                        <ValidationMessage For="@(() => Model!.Email)" />
+                        @if (!string.IsNullOrEmpty(Model.Email) && !new EmailAddressAttribute().IsValid(Model.Email))
+                        {
+                            <div class="text-danger">Please enter a valid email address.</div>
+                        }
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <label for="password" class="form-label">Password</label>
-                    <InputText type="password" @bind-Value="Model.Password" class="form-control" placeholder="Password" />
+                <div class="form-group col-md-6">
+                    <label for="password">Password</label>
+                    <InputText id="password" type="password" @bind-Value="Model.Password" class="form-control" placeholder="Password" />
+                    <div class="small">
+                        <ValidationMessage For="@(() => Model!.Password)" />
+                    </div>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <button type="submit" class="btn btn-outline-primary w-100">🔑 Login</button>
 
                 </div>
                 <div class="col-md-2">
-                    <a href="@(NavigationManager.ToAbsoluteUri("Account/Register"))" class="btn btn-success w-100">Register</a>
+                    <a href="@(NavigationManager.ToAbsoluteUri("Account/Register"))" class="btn btn-outline-success w-100">🌟 New User?</a>
                 </div>
             </div>
         </EditForm>
     </div>
 </div>
+
 
 @code {
     private string? statusMessage;
@@ -79,8 +93,11 @@
 
     private sealed class LoginModel
     {
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
         public string Email { get; set; } = "";
 
+        [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; } = "";
     }
 }

@@ -10,35 +10,40 @@
             _items = [];
         }
 
+        public void AddItem(Cheese cheese, int quantity)
+        {
+            
+            var item = _items.FirstOrDefault(item => item.Cheese.Id == cheese.Id);
+            if (item is null)
+                _items.Add(new CartItem { Cheese = cheese, Quantity = quantity });
+            else
+                item.Quantity += quantity;
 
+         
+            OnCartUpdated?.Invoke();
+        }
+
+        public int Count()
+        {
+           
+            return _items.Count;
+        }
+
+        public decimal Total()
+        {
+            
+            return _items.Sum(item => item.Cheese.Price * item.Quantity);
+        }
 
         public IEnumerable<CartItem> GetItems()
         {
-            return _items;
-        }
-
-        public void AddItem(Cheese cheese, int quantity)
-        {
-            var item = _items.FirstOrDefault(item => item.Cheese.Id == cheese.Id);
-            if (item == null)
-            {
-                _items.Add(new CartItem { Cheese = cheese, Quantity = quantity });
-            }
-            else
-            {
-                item.Quantity += quantity;
-            }
-
-            OnCartUpdated?.Invoke();
-        }
-        public int Count()
-        {
             
-            return _items.Count;
+            return _items;
         }
 
         public void RemoveItem(Cheese cheese)
         {
+          
             _items.RemoveAll(item => item.Cheese.Id == cheese.Id);
             OnCartUpdated?.Invoke();
         }
@@ -55,18 +60,25 @@
             OnCartUpdated?.Invoke();
         }
 
-        public decimal Total()
+        public void Clear()
         {
-            // sum the price of all items in the cart
-            return _items.Sum(item => item.Cheese.Price * item.Quantity);
+            
+            _items.Clear();
+            OnCartUpdated?.Invoke();
+        }
+
+        public int GetQuantity(Cheese cheese)
+        {
+         
+            var item = _items.FirstOrDefault(item => item.Cheese.Id == cheese.Id);
+            return item?.Quantity ?? 0;
         }
 
         public void SetItems(IEnumerable<CartItem> items)
         {
+            
             _items = items.ToList();
             OnCartUpdated?.Invoke();
         }
-
- 
     }
 }

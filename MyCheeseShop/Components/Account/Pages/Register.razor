@@ -33,11 +33,34 @@
                     <InputText type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
                 </div>
                 <div class="col-md-6">
-                    <label for="name" class="form-label">Confirm Password</label>
+                    <label for="password" class="form-label">Confirm Password</label>
                     <InputText type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
+                </div>
+                <div class="col-md-6">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <InputText type="firstName" class="form-control" placeholder="First Name" @bind-Value="Model.FirstName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <InputText type="lastName" class="form-control" placeholder="Last Name" @bind-Value="Model.LastName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="address" class="form-label">Address</label>
+                    <InputText type="address" class="form-control" placeholder="Address" @bind-Value="Model.Address" />
+                </div>
+                <div class="col-md-6">
+                    <label for="city" class="form-label">City</label>
+                    <InputText type="city" class="form-control" placeholder="City" @bind-Value="Model.City" />
+                </div>
+                <div class="col-md-6">
+                    <label for="postcode" class="form-label">PostCode</label>
+                    <InputText type="postcode" class="form-control" placeholder="PostCode" @bind-Value="Model.PostCode" />
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">Register</button>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">🔑Login</button>
                 </div>
             </div>
         </EditForm>
@@ -63,13 +86,15 @@
                 UserName = Model.Email,
                 Email = Model.Email,
                 FirstName = Model.FirstName,
+                LastName = Model.LastName,
                 Address = Model.Address,
                 City = Model.City,
-                PostCode = Model.Postcode
+                PostCode = Model.PostCode
             };
 
-        var result = await UserManager.CreateAsync(user, Model.Password); 
-        await UserManager.AddToRoleAsync(user, "Customer");
+
+        var result = await UserManager.CreateAsync(user, Model.Password);
+        
 
         if (!result.Succeeded)
         {
@@ -77,6 +102,7 @@
             isError = true;
             return;
         }
+        await UserManager.AddToRoleAsync(user, "Customer");
 
         Logger.LogInformation("User created a new account with password.");
 
@@ -88,51 +114,41 @@
 
     private sealed class RegisterModel
     {
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = "";
 
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
+        [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]+$",
+            ErrorMessage = "Password must contain at least one letter, one number, and one special character")]
         public string Password { get; set; } = "";
 
+        [Required(ErrorMessage = "Confirm password is required")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; } = "";
 
+        [Required(ErrorMessage = "First name is required")]
+        [MaxLength(50, ErrorMessage = "First name cannot exceed 50 characters")]
         public string FirstName { get; set; } = "";
 
+        [Required(ErrorMessage = "Last name is required")]
+        [MaxLength(50, ErrorMessage = "Last name cannot exceed 50 characters")]
         public string LastName { get; set; } = "";
 
+        [Required(ErrorMessage = "Address is required")]
+        [MaxLength(100, ErrorMessage = "Address cannot exceed 100 characters")]
         public string Address { get; set; } = "";
 
+        [Required(ErrorMessage = "City is required")]
+        [MaxLength(50, ErrorMessage = "City cannot exceed 50 characters")]
         public string City { get; set; } = "";
 
-        public string Postcode { get; set; } = "";
-
-    }
-    private sealed class RegisteredModel
-    {
-        [Required(ErrorMessage = "Please enter your email.")]
-        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
-        public string Email { get; set; } = "";
-
-        [Required(ErrorMessage = "Please enter a password.")]
-        [DataType(DataType.Password)]
-        public string Password { get; set; } ="";
-
-        [Required(ErrorMessage = "Please confirm your password.")]
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "The Password and Confirmation password do not match")]
-        public string ConfirmPassword { get; set; } ="";
-
-        [Required(ErrorMessage = "Please enter your first name.")]
-        public string FirstName { get; set; } ="";
-
-        [Required(ErrorMessage = "Please enter your last name.")]
-        public string LastName { get; set; } = "";
-
-        [Required(ErrorMessage = "Please enter your address")]
-        public string Address { get; set; } = "";
-
-        [Required(ErrorMessage = "Please enter your city.")]
-        public string City { get; set; } = "";
-
-        [Required(ErrorMessage = "Please enter post code.")]
+        [Required(ErrorMessage = "Post code is required")]
+        [RegularExpression(@"^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$",
+            ErrorMessage = "Invalid postal code format. Example: A1A 1A1")]
         public string PostCode { get; set; } = "";
     }
+
+
 }

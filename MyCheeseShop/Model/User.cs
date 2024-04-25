@@ -13,5 +13,6 @@ namespace MyCheeseShop.Model
         public string City { get; set; }
             
         public string PostCode { get; set; }
+        public object Orders { get; internal set; }
     }
 }

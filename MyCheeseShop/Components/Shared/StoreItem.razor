@@ -1,20 +1,89 @@
-﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+﻿﻿@using MyCheeseShop.Context
+@using MyCheeseShop.Model
+@inject CheeseProvider CheeseProvider
 @inject ProtectedSessionStorage ProtectedSessionStore
 @inject ShoppingCart ShoppingCart
+@inject NavigationManager NavigationManager
 
 
-<h3>StoreItem</h3>
 
 
-@code{
+
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    @foreach (var cheese in Cheeses)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="/img/cheeses/@cheese.ImageUrl" class="card-img-top p-1" alt="@cheese.Name" onerror="this.onerror = null; this.src='/img/no_cheese.png'">
+                <div class="card-body d-flex flex-column">
+                    <h5>
+                        <span class="badge badge bg-primary">@cheese.Type</span>
+                        <span class="badge @GetStrengthBadgeColor(cheese.Strength)">@cheese.Strength</span>
+                    </h5>
+                    <div class="d-flex flex-column flex-sm-row justify-content-between">
+                        <h5 class="card-title">@cheese.Name</h5>
+                        <h5><span class="badge bg-danger">@cheese.Price.ToString("C")</span></h5>
+                    </div>
+                    <p class="card-text">@cheese.Description</p>
+                    <div class="mt-auto"></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+
+@code {
+
+    public IQueryable<Cheese>? Cheeses { get; set; }
+
     [Parameter]
     public Cheese Cheese { get; set; }
 
+
     private int quantity = 1;
+
+
+    public string GetStrengthBadgeColor(string strength)
+    {
+        switch (strength.ToLower())
+        {
+            case "medium":
+                return "badge bg-warning text-dark";
+            case "mild":
+                return "badge bg-success";
+            case "strong":
+                return "badge bg-danger";
+            default:
+                return "badge bg-primary";
+        }
+    }
+
+
 
     public async Task AddToCart()
     {
         ShoppingCart.AddItem(Cheese, quantity);
         await ProtectedSessionStore.SetAsync("cart", ShoppingCart.GetItems());
     }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCheeses();
+    }
+
+    private async Task GetCheeses()
+    {
+        Cheeses = (await CheeseProvider.GetAllCheesesAsync()).AsQueryable();
+    }
+
+
+
+
+
 }

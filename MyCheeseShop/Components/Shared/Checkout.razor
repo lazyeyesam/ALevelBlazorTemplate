@@ -1,0 +1,87 @@
+﻿@page "/checkout"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
+@inject UserProvider UserProvider
+@inject OrderProvider OrderProvider
+@inject ShoppingCart ShoppingCart
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+
+
+
+
+
+
+
+
+@code {
+
+    private User user;
+    private PaymentDetails paymentDetails;
+    private EditContext editContext;
+    private bool isPaying;
+
+    protected override async Task OnInitializedAsync()
+    {
+        paymentDetails = new PaymentDetails();
+        editContext = new EditContext(paymentDetails);
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState!.User!.Identity!.Name!;
+        user = UserProvider.GetUserByUsername(username)!;
+    }
+
+    private async Task MakePayment()
+    {
+        await SimulatePayment();
+
+        await OrderProvider.CreateOrder(user, ShoppingCart.GetItems());
+        ShoppingCart.Clear();
+        NavigationManager.NavigateTo("/thank-you");
+    }
+
+    private async Task SimulatePayment()
+    {
+        isPaying = true;
+        StateHasChanged();
+
+        await Task.Delay(2000);
+
+        isPaying = false;
+        StateHasChanged();
+    }
+
+    private void GoToCart()
+    {
+        NavigationManager.NavigateTo("/cart");
+    }
+
+    private string GetFormattedName(User user)
+    {
+        return $"{user.FirstName} {user.LastName}";
+    }
+
+    private string GetFormattedAddress(User user)
+    {
+        return $"{user.Address}{Environment.NewLine}{user.City}{Environment.NewLine}{user.PostCode}";
+    }
+
+    private sealed class PaymentDetails
+    {
+        [Required]
+        public string NameOnCard { get; set; }
+
+        [Required]
+        public string CardNumber { get; set; }
+
+        [Required]
+        public string ExpiryDate { get; set; }
+
+        [Required]
+        public string SecurityCode { get; set; }
+    }
+}

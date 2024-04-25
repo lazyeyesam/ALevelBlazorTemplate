@@ -1,0 +1,12 @@
+﻿@page "/my-orders"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject OrderProvider OrderProvider
+@inject UserProvider UserProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+<h3>MyOrders</h3>
+
+@code {
+
+}

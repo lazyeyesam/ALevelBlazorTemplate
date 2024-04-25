@@ -16,10 +16,10 @@ namespace MyCheeseShop.Context
             _userManager = userManager;
             _roleManager = roleManager;
         }
+
         public async Task Seed()
         {
             await _context.Database.MigrateAsync();
-
             if (!_context.Users.Any())
             {
                 await _roleManager.CreateAsync(new IdentityRole("Admin"));
@@ -31,7 +31,7 @@ namespace MyCheeseShop.Context
                 var admin = new User
                 {
                     UserName = adminEmail,
-                    Email = adminEmail,
+                    Email = adminPassword,
                     FirstName = "Admin",
                     LastName = "User",
                     Address = "123 Admin Street",
@@ -40,20 +40,32 @@ namespace MyCheeseShop.Context
                 };
 
                 await _userManager.CreateAsync(admin, adminPassword);
-                await _userManager.CreateAsync(admin, "Admin");
+                await _userManager.AddToRoleAsync(admin, "Admin");
 
 
             }
+
             if (!_context.Cheeses.Any())
             {
                 var cheeses = GetCheeses();
                 _context.Cheeses.AddRange(cheeses);
                 await _context!.SaveChangesAsync();
             }
-
-
         }
-        public List<Cheese> GetCheeses()
+
+        public async Task<List<Cheese>> GetAllCheesesAsync()
+        {
+            return await _context.Cheeses.OrderBy(cheese => cheese.Name).ToListAsync();
+        }
+
+        public Cheese? GetCheese(int id)
+        {
+            return _context.Cheeses.Find(id);
+        }
+
+
+
+        private List<Cheese> GetCheeses()
         {
             return
             [
