@@ -17,7 +17,7 @@ namespace MyCheeseShop.Context
         {
             if (user == null) return null;
 
-            // Return all orders for the specified user
+           
             return await _context.Orders
                 .Where(order => order.User.UserName == user.UserName)
                 .Include(order => order.Items)
@@ -28,7 +28,7 @@ namespace MyCheeseShop.Context
 
         public async Task CreateOrder(User user, IEnumerable<CartItem> items)
         {
-            // Create a new order
+            
             var order = new Order
             {
                 User = user,
@@ -41,7 +41,7 @@ namespace MyCheeseShop.Context
                 Status = OrderStatus.Placed
             };
 
-            // Add the order to the database
+            
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
         }

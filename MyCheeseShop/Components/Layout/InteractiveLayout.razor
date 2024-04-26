@@ -1,7 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MyCheeseShop.Context
+@inherits LayoutComponentBase
 @layout MyCheeseShop.Components.Layout.MainLayout
 
-@inject DatabaseContext DatabaseContext
+@inject DatabaseContext DatabaseContext 
 @inject ShoppingCart ShoppingCart
 @inject ProtectedSessionStorage ProtectedSessionStore
 

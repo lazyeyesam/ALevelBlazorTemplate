@@ -41,8 +41,6 @@ namespace MyCheeseShop.Context
 
                 await _userManager.CreateAsync(admin, adminPassword);
                 await _userManager.AddToRoleAsync(admin, "Admin");
-
-
             }
 
             if (!_context.Cheeses.Any())
@@ -63,13 +61,11 @@ namespace MyCheeseShop.Context
             return _context.Cheeses.Find(id);
         }
 
-
-
         private List<Cheese> GetCheeses()
         {
             return
             [
-                new Cheese { Name = "Gouda Gold", Type = "Semi-Hard", Description = "A smooth and creamy cheese originating from the Netherlands, known for its slightly nutty flavor and golden hue.", Strength = "Medium", Price = 8.99m },
+                new Cheese { Name = "Gouda Gold", Type = "Semi-Hard", Description = "A smooth and creamy cheese originating from the Netherlands, known for its slightly nutty flavor and golden hue.", Strength = "Medium", Price = 8.99m, },
                 new Cheese { Name = "Camembert Classic", Type = "Soft-Ripened", Description = "A quintessential French cheese with a velvety rind and creamy interior, boasting rich, earthy flavors with hints of mushroom.", Strength = "Mild", Price = 10.49m },
                 new Cheese { Name = "Cheddar Supreme", Type = "Hard", Description = "An aged English cheese with a sharp and tangy taste, characterized by its crumbly texture and deep orange color.", Strength = "Strong", Price = 7.99m },
                 new Cheese { Name = "Brie Royale", Type = "Soft-Ripened", Description = "A luxurious French cheese with a buttery texture and delicate, creamy taste, perfect for pairing with fruits and crackers.", Strength = "Mild", Price = 11.99m },
@@ -92,11 +88,5 @@ namespace MyCheeseShop.Context
 
             ];
         }
-
-
-
-
-
-
     }
 }
