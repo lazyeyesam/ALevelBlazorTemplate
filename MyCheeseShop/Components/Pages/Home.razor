@@ -16,7 +16,7 @@
 }
 else if (!cheeses.Any())
 {
-    <p>No Cheeses Found</p>
+    <p>No Cheeses Trapped</p>
 }
 
 @foreach (var cheese in FilteredCheeses)
@@ -28,7 +28,7 @@ else if (!cheeses.Any())
 
 @if (!FilteredCheeses.Any())
 {
-    <p>No Cheeses Found</p>
+    <p>No Cheeses Trapped</p>
 }
 
 
@@ -41,7 +41,7 @@ else if (!cheeses.Any())
 
     private IEnumerable<Cheese> filteredCheeses;
     private IEnumerable<Cheese> FilteredCheeses
-    {
+ {
         get
         {
             return filteredCheeses.Where(GetSearchCriteria);
