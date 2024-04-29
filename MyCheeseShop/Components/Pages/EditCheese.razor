@@ -1,0 +1,50 @@
+﻿@page "/edit-cheese"
+@using Microsoft.AspNetCore.Authorization
+@inject CheeseProvider CheeseProvider
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Cheese Trap - Edit Cheese</PageTitle>
+ 
+<h3>Edit Cheese</h3>
+
+@if (cheeses is null)
+{
+    <p>Loading...</p>
+}
+else if (!cheeses.Any())
+{
+    <p>No Cheeses Trapped</p>
+}
+else
+{
+    <div class="col-md-5 col-12 mb-2">
+        <select id="cheeseSelect" class="form-select" @onchange="OnCheeseSelected">
+            @foreach (var cheese in cheeses)
+            {
+                <option value="@cheese.Id">@cheese.Name</option>
+            }
+        </select>
+    </div>
+
+    <CheeseForm Cheese="selectedCheese" />
+}
+
+@code {
+    private IEnumerable<Cheese>? cheeses;
+    private int? selectedCheeseId;
+    private Cheese? selectedCheese;
+
+    protected async override Task OnInitializedAsync()
+    {
+        cheeses = await CheeseProvider.GetAllCheesesAsync();
+        selectedCheese = cheeses?.FirstOrDefault();
+        selectedCheeseId = selectedCheese?.Id;
+    }
+
+    private void OnCheeseSelected(ChangeEventArgs e)
+    {
+        if (e.Value is null) return;
+        selectedCheeseId = int.Parse(e.Value.ToString()!);
+        selectedCheese = cheeses?.FirstOrDefault(cheese => cheese.Id == selectedCheeseId);
+    }
+}

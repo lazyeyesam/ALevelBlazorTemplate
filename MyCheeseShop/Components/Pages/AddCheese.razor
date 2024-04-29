@@ -1,0 +1,62 @@
+﻿@page "/add-cheese"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Add Cheese - Cheese Trap</PageTitle>
+
+<h3>Add Cheese</h3>
+
+<CheeseForm />
+
+<div class="card">
+    <div class="card-body bg-light">
+        <h4 class="card-title">Add Cheese</h4>
+        <EditForm Model="model" OnValidSubmit="Submit" FormName="addCheeseForm">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label for="name" class="form-label">Name</label>
+                    <InputText @bind-Value="model.Name" class="form-control" id="name" name="name" placeholder="Name" required />
+                </div>
+                <div class="col-md-3">
+                    <label for="type" class="form-label">Type</label>
+                    <InputText @bind-Value="model.Type" class="form-control" id="type" name="type" placeholder="Type" required />
+                </div>
+                <div class="col-md-3">
+                    <label for="description" class="form-label">Description</label>
+                    <InputText @bind-Value="model.Description" class="form-control" id="description" name="description" placeholder="Description" required />
+                </div>
+                <div class="col-md-3">
+                    <label for="strength" class="form-label">Strength</label>
+                    <InputText @bind-Value="model.Strength" class="form-control" id="strength" name="strength" placeholder="Strength" required />
+                </div>
+                <div class="col-md-3">
+                    <label for="price" class="form-label">Price</label>
+                    <InputNumber @bind-Value="model.Price" class="form-control" id="price" name="price" placeholder="Price" required />
+                </div>
+                <div class="col-md-3">
+                    <label for="imageUrl" class="form-label">Image URL</label>
+                    <InputText @bind-Value="model.ImageUrl" class="form-control" id="imageUrl" name="imageUrl" placeholder="Image URL" />
+                </div>
+            </div>
+
+            <div class="d-grid col-3 float-end">
+                <button type="submit" class="btn btn-primary">Add</button>
+            </div>
+
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private Cheese model = new Cheese();
+
+    protected override void OnInitialized()
+    {
+        model = new Cheese();
+    }
+
+    private void Submit()
+    {
+
+    }
+}
